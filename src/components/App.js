@@ -5,9 +5,55 @@ import DAI from '../abis/DAI.json'
 import idledai from '../idledai.png';
 import Web3 from 'web3';
 import './App.css';
+import { useLoading, Puff } from '@agney/react-loading';
 
-const daiAddress = '0x6B175474E89094C44Da98b954EedeAC495271d0F';
+const web3 = new Web3(window.ethereum)
+
+const daiAddress = '0xe58eFF63575671e05d5C542af692f2367EB5836D';
 const idleDaiContractAddress = '0x3fE7940616e5Bc47b0775a0dccf6237893353bB4';
+
+let minABI = [
+  // balanceOf
+  {
+    "constant":true,
+    "inputs":[{"name":"_owner","type":"address"}],
+    "name":"balanceOf",
+    "outputs":[{"name":"balance","type":"uint256"}],
+    "type":"function"
+  },
+  // decimals
+  {
+    "constant":true,
+    "inputs":[],
+    "name":"decimals",
+    "outputs":[{"name":"","type":"uint8"}],
+    "type":"function"
+  },
+  // transfer
+ {
+  "constant": false,
+  "inputs": [
+   {
+    "name": "_to",
+    "type": "address"
+   },
+   {
+    "name": "_value",
+    "type": "uint256"
+   }
+  ],
+  "name": "transfer",
+  "outputs": [
+   {
+    "name": "",
+    "type": "bool"
+   }
+  ],
+  "type": "function"
+ }
+];
+
+let contract = new web3.eth.Contract(minABI,daiAddress);
 
 class App extends Component {
 
@@ -15,16 +61,22 @@ class App extends Component {
     await this.loadBlockchainData(this.props.dispatch)
   }
 
+  async getBalance(walletAddress) {
+    let balance = await contract.methods.balanceOf(walletAddress).call();
+    return web3.utils.fromWei(balance, 'ether');
+  } 
+
   async loadBlockchainData(dispatch) {
     if(typeof window.ethereum!=='undefined'){
-      const web3 = new Web3(window.ethereum)
+      
       //const netId = await web3.eth.net.getId()
       const accounts = await web3.eth.getAccounts()
 
       //load balance
       if(typeof accounts[0] !=='undefined'){
         const balance = await web3.eth.getBalance(accounts[0])
-        this.setState({account: accounts[0], balance: balance, web3: web3})
+        const tokenBalance = await this.getBalance(accounts[0])
+        this.setState({account: accounts[0], balanceEth: web3.utils.fromWei(balance, 'ether'), balanceIdle: tokenBalance, web3: web3})
       } else {
         window.alert('Please login with MetaMask')
       }
@@ -43,6 +95,8 @@ class App extends Component {
       window.alert('Please install MetaMask')
     }
   }
+
+  
 
   async lend(amount) {
     if(this.state.idledai!=='undefined'){
@@ -98,12 +152,18 @@ class App extends Component {
       account: '',
       token: null,
       idledai: null,
-      balance: 0,
-      idleDAIAddress: null
+      balanceEth: 0,
+      idleDAIAddress: null,
+      loading: true,
+      indicator: <Puff width="70" />,
     }
   }
 
   render() {
+    let { loading, indicator } = this.state
+    if (loading ==! true) {
+      indicator = ''
+    } 
     return (
       <div className='text-monospace'>
         <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
@@ -122,7 +182,8 @@ class App extends Component {
           <h1>Welcome </h1><h2>{this.state.account}</h2>
           <br></br>
           
-          <h1>to the DAI interest machine by IDLE finance</h1>
+          <h1>{this.state.balanceEth}</h1>
+          <h1>{this.state.balanceIdle}</h1>
           <br></br>
           <div className="row">
             <main role="main" className="col-lg-12 d-flex text-center">
