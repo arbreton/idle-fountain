@@ -72,9 +72,27 @@ class App extends Component {
     }
 
     try {
+      
       web3 = new Web3(window.ethereum || process.env.REACT_APP_INFURA_NODE)
-      console.log(web3)
       contract = new web3.eth.Contract(minABI,daiAddress)
+      if (window.ethereum) {
+        web3 = new Web3(window.ethereum);
+        try { 
+           window.ethereum.enable().then(function() {
+               // User has allowed account access to DApp...
+           });
+        } catch(e) {
+           // User has denied account access to DApp...
+        }
+     }
+     // Legacy DApp Browsers
+     else if (window.web3) {
+         web3 = new Web3(window.web3.currentProvider);
+     }
+     // Non-DApp Browsers
+     else {
+         alert('You have to install MetaMask !');
+     }
     } catch(e) {
       console.log(e)
     }
