@@ -1,12 +1,12 @@
-For Kovan use:
+# **For Kovan use:**
 
-INFURA_NODE='https://kovan.infura.io/v3/YOUR_API_KEY'
+>INFURA_NODE='https://kovan.infura.io/v3/YOUR_API_KEY' <br>
 DAI_ADDRESS='0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa'
 IDLE_ADDRESS='0x295CA5bC5153698162dDbcE5dF50E436a58BA21e'
 
-For Mainnet use:
+# **For Mainnet use:**
 
-INFURA_NODE='https://kovan.infura.io/v3/YOUR_API_KEY'
+>INFURA_NODE='https://kovan.infura.io/v3/YOUR_API_KEY' <br>
 DAI_ADDRESS='0x6b175474e89094c44da98b954eedeac495271d0f'
 IDLE_ADDRESS='0x3fe7940616e5bc47b0775a0dccf6237893353bb4'
 
