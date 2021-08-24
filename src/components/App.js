@@ -7,10 +7,10 @@ import Web3 from 'web3';
 import './App.css';
 import { Puff } from '@agney/react-loading';
 
-const web3 = new Web3(window.ethereum)
+const web3 = new Web3(window.ethereum || process.env.REACT_APP_INFURA_NODE)
 
-const daiAddress = '0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa';
-const idleDaiContractAddress = '0x295CA5bC5153698162dDbcE5dF50E436a58BA21e';
+const daiAddress = process.env.REACT_APP_DAI_ADDRESS;
+const idleDaiContractAddress = process.env.REACT_APP_IDLE_ADDRESS;
 
 let minABI = [
   // balanceOf
@@ -234,7 +234,7 @@ class App extends Component {
       </form>
 
     </div>
-    if (loading ==! true) {
+    if (loading ===! true) {
       indicator = ''
       headerLoading = ''
     } else {
@@ -245,7 +245,14 @@ class App extends Component {
       <div className='text-monospace'>
         <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
         <img src={idledai} className="App-logo" alt="logo" height="32"/>
-          <b>DAI interest machine</b> 
+        <a
+            className="navbar-brand col-sm-3 col-md-2 mr-0"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+        <img src={idledai} className="App-logo" alt="logo" height="32"/>
+          <b>DAI interest machine</b>
+        </a>
         </nav>
         <div className="container-fluid mt-5 text-center">
         <br></br>
