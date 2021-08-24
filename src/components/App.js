@@ -7,7 +7,7 @@ import Web3 from 'web3';
 import './App.css';
 import { Puff } from '@agney/react-loading';
 
-const web3 = new Web3(window.ethereum || process.env.REACT_APP_INFURA_NODE)
+let web3 = ''
 
 const daiAddress = process.env.REACT_APP_DAI_ADDRESS;
 const idleDaiContractAddress = process.env.REACT_APP_IDLE_ADDRESS;
@@ -53,7 +53,7 @@ let minABI = [
  }
 ];
 
-let contract = new web3.eth.Contract(minABI,daiAddress);
+let contract = '';
 
 class App extends Component {
 
@@ -71,6 +71,15 @@ class App extends Component {
       indicator: <Puff width="70" />
     }
 
+    try {
+      web3 = new Web3(window.ethereum || process.env.REACT_APP_INFURA_NODE)
+      console.log(web3)
+      contract = new web3.eth.Contract(minABI,daiAddress)
+    } catch(e) {
+      console.log(e)
+    }
+    
+
     this.loadingChange = this.loadingChange.bind(this)
     this.lend = this.lend.bind(this)
   }
@@ -86,7 +95,6 @@ class App extends Component {
 
   async loadBlockchainData(dispatch) {
     if(typeof window.ethereum!=='undefined'){
-      
       //const netId = await web3.eth.net.getId()
       const accounts = await web3.eth.getAccounts()
 
@@ -244,9 +252,9 @@ class App extends Component {
     return (
       <div className='text-monospace'>
         <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-        <img src={idledai} className="App-logo" alt="logo" height="32"/>
-        <a
+          <a
             className="navbar-brand col-sm-3 col-md-2 mr-0"
+            href="/"
             target="_blank"
             rel="noopener noreferrer"
           >
