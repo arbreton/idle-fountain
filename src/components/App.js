@@ -5,7 +5,7 @@ import DAI from '../abis/DAI.json'
 import idledai from '../idledai.png';
 import Web3 from 'web3';
 import './App.css';
-import { useLoading, Puff } from '@agney/react-loading';
+import { Puff } from '@agney/react-loading';
 
 const web3 = new Web3(window.ethereum)
 
